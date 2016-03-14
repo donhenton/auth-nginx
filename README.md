@@ -12,3 +12,6 @@ Dockerfile for nginx with auth-request-module and http-ssl module compiled in. S
 ### Compile options
 > The compile options include the auth-request module, which can be used for authorization interception and SSO like things
 > "--with-debug" option will allow auth request matching debug information which can be activated with the debug entry on the error_log line in the conf file. 
+
+### Docker host
+In the above configuration the add-host flag adds the ip to the container etc/hosts file that will allow access to services on the host, eg a web server.
