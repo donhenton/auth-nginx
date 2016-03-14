@@ -8,4 +8,6 @@ Dockerfile for nginx with auth-request-module and http-ssl module compiled in. S
   -v /Users/dhenton/nginx/logs:/var/log/nginx  --rm  auth-nginx \
 
 
-
+### Compile options
+> The compile options include the auth-request module, which can be used for authorization interception and SSO like things
+> "--with-debug" option will allow auth request matching debug information which can be activated with the debug entry on the error_log line in the conf file. 
