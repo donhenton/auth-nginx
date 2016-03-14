@@ -3,9 +3,10 @@ Dockerfile for nginx with auth-request-module and http-ssl module compiled in. S
 
 ### Sample usage:
 ```bash
-  docker  run --name=test  -p 7777:80 -v /Users/dhenton/bin/nginx-conf/nginx.conf:/etc/nginx/nginx.conf:ro \
-  -v /Users/dhenton/FE-projects/css-sandbox/droptest:/usr/share/nginx/html:ro \
-  -v /Users/dhenton/nginx/logs:/var/log/nginx  --rm  auth-nginx \
+  docker  run --name=test  -p 80:80 -v /Users/dhenton/bin/nginx-conf/ngproxy.conf:/etc/nginx/nginx.conf:ro -v \
+  /Users/dhenton/FE-projects/css-sandbox/droptest:/usr/local/nginx/html:ro -v /Users/dhenton/nginx/logs:/var/log/nginx  \
+  --add-host dockerhost:`ifconfig vboxnet0 | grep 'inet' |awk '{print $2}'` \
+  --rm  auth-nginx-debug 
 ```
 
 ### Compile options
