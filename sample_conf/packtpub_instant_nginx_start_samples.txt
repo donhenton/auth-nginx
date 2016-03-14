@@ -1,0 +1,252 @@
+
+server {
+    listen 80;
+    server_name example.com;
+
+    root /var/www/website;
+}
+
+
+server {
+    listen 80;
+    server_name example.com;
+
+    root /var/www/website;
+    index index.php;
+
+    location / {
+        try_files $uri $uri/ /index.php;
+    }
+
+    location ~ \.php$ {
+        include fastcgi.conf;
+        fastcgi_pass 127.0.0.1:9000;
+    }
+}
+
+
+server {
+    root /home/bill/www;
+    index index.php;
+
+    location /phpmyadmin {
+        root /var/www;
+        try_files $uri /phpmyadmin/index.php;
+    }
+
+    location ~* \.php$ {
+        fastcgi_pass php_upstream;
+    }
+}
+
+server {
+    root /home/bill/www;
+    index index.php;
+
+    location ^~ /phpmyadmin {
+        root /var/www;
+
+       location ~* \.php$ {
+           fastcgi_pass php_upstream;
+       }
+    }
+
+    location ~* \.php$ {
+        fastcgi_pass php_upstream;
+    }
+}
+
+
+server {
+    access_log /var/log/nginx/access.log;
+
+    location ~ ^/calendar/.+\.php$ {
+        access_log /var/log/nginx/php-requests.log;
+    }
+}
+
+
+server {
+    access_log /var/log/nginx/access.log;
+
+    location ~ ^/calendar/.+\.php$ {
+        access_log /var/log/nginx/access.log;
+        access_log /var/log/nginx/php-requests.log;
+    }
+}
+
+
+server {
+    rewrite ^/booking(.*) /calendar$1;
+
+    location /calendar {
+        rewrite ^ /index.php;
+    }
+}
+
+
+server {
+    location /calendar {
+        rewrite ^ /static.php;
+
+        location ~ \.php$ {
+            fastcgi_pass php_upstream;
+        }
+    }
+}
+
+
+location ~ \.php$ {
+    rewrite ^/old.php /new.php break;
+    fastcgi_pass php_upstream;
+}
+
+
+location /proxy {
+    proxy_set_header HOST $http_host;
+    proxy_set_header X-Forwarded-For $remote_addr;
+    proxy_pass http://127.0.0.1:8080;
+}
+
+
+gzip             on;
+gzip_min_length  100;
+gzip_proxied     expired no-cache no-store private auth;
+gzip_comp_level  5;
+gzip_types       text/plain text/css text/xml text/javascript application/xml application/xml+rss application/x-javascript image/x-icon;
+gzip_disable     "msie6";
+
+
+gzip_static      on;
+gzip_proxied     expired no-cache no-store private auth;
+gzip_disable     "msie6";
+
+
+server {
+    root /var/www;
+
+    location / {
+        try_files $uri /index.php$is_args$args;
+    }
+
+    location ~* \.php$ {
+        default_type text/html;
+        charset      utf-8;
+
+        if ($request_method = GET) {
+            set $memcached_key $request_method$request_uri;
+
+            memcached_pass host:11211;
+            error_page     404 502 504 = @nocache;
+        }
+
+        if ($request_method != GET) {
+            fastcgi_pass backend;
+        }
+    }
+
+    location @nocache {
+        fastcgi_pass backend;
+    }
+}
+
+
+fastcgi_cache_path /var/cache/nginx levels=1:2 keys_zone=microcache:5m max_size=500m;
+
+server {
+    root /var/www;
+
+    location / {
+        try_files $uri /index.php$is_args$args;
+    }
+
+    location ~* \.php$ {
+        set $no_cache "";
+
+        # Verify request method is GET or HEAD.
+        if ($request_method !~ ^(GET|HEAD)$) {
+            set $no_cache "1";
+        }
+
+        # Check if a nocache cookie is set, for instance after handling a POST.
+        if ($http_cookie ~* "_nocache") {
+            set $no_cache "1";
+        }
+
+        fastcgi_no_cache $no_cache;
+        fastcgi_cache_bypass $no_cache;
+
+        fastcgi_cache microcache;
+        fastcgi_cache_key $request_method$request_uri;
+
+        fastcgi_cache_valid 200 5s;
+        fastcgi_cache_use_stale updating;
+
+        fastcgi_pass backend;
+    }
+}
+
+
+set_real_ip_from  192.168.1.0/24;
+set_real_ip_from  192.168.2.1;
+set_real_ip_from  2001:0db8::/32;
+real_ip_header    X-Forwarded-For;
+real_ip_recursive on;
+
+
+server {
+    root /var/www;
+
+    location /video {
+        root /mnt/data;
+    }
+}
+
+
+geoip_country         /var/data/GeoIP.dat;
+geoip_city            /var/data/GeoLiteCity.dat;
+geoip_proxy           192.168.2.0/24;
+geoip_proxy_recursive on;
+
+
+limit_conn_zone $binary_remote_addr zone=perip:5m;
+
+server {
+    location /download/ {
+        limit_conn perip 1;
+        limit_conn_log_level error;
+    }
+}
+
+
+limit_req_zone $binary_remote_addr zone=one:5m rate=1r/s;
+
+server {
+    location /search/ {
+        limit_req zone=one burst=5;
+        limit_req_log_level error;
+    }
+}
+
+
+location ~ \.flv$ {
+    root /var/www/video;
+    flv;
+}
+
+
+location ~ \.mp4$ {
+    root /var/www/video;
+
+    mp4;
+    mp4_buffer_size     512k
+    mp4_max_buffer_size 10m;
+}
+
+
+location /chat/ {
+    proxy_pass ​http://backend;
+    proxy_http_version 1.1;
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection "upgrade";
+}
