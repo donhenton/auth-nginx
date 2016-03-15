@@ -15,8 +15,11 @@ Dockerfile for nginx with auth-request-module and http-ssl module compiled in. S
 
 
 ### Docker host
-In the above configuration the add-host flag adds the ip to the container etc/hosts file that will allow access to services on the host, eg a web server.
+In the above sample usage the add-host flag adds the ip to the container etc/hosts file that will allow access to services on the host, eg a web server.
 
+### Docker file lua
+The Dockerfile_lua script compiles the lua module which allows lua scripting for conf files: 
+https://docs.apitools.com/blog/2014/07/02/using-environment-variables-in-nginx-conf.html. Sample usage is in the sample conf folder
 
 
 ### More Information
