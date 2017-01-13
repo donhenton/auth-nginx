@@ -16,8 +16,8 @@ The -v options in the sample usage map a drive on the host to a drive expected b
 host folder /Users/dhenton/nginx/logs is mapped to /var/log/nginx, which is where the docker container will put its logs.
 
 ### Compile options
-> The compile options include the auth-request module, which can be used for authorization interception and SSO like things
-> "--with-debug" option will allow auth request matching debug information which can be activated with the debug entry on the error_log line in the conf file. These compile options are located in the docker file around 29. The current file in master does not have this turnd on.
+The compile options include the auth-request module, which can be used for authorization interception and SSO like things
+"--with-debug" option will allow auth request matching debug information which can be activated with the debug entry on the error_log line in the conf file. These compile options are located in the docker file around 29. The current file in master does not have this turnd on.
 
 
 ### Docker host
