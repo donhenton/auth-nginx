@@ -3,15 +3,21 @@ Dockerfile for nginx with auth-request-module and http-ssl module compiled in. S
 
 ### Sample usage:
 ```bash
-  docker  run --name=test  -p 80:80 -v /Users/dhenton/bin/nginx-conf/ngproxy.conf:/etc/nginx/nginx.conf:ro -v \
-  /Users/dhenton/FE-projects/css-sandbox/droptest:/usr/local/nginx/html:ro -v /Users/dhenton/nginx/logs:/var/log/nginx  \
+  docker  run --name=test  -p 80:80 
+  -v /Users/dhenton/bin/nginx-conf/ngproxy.conf:/etc/nginx/nginx.conf:ro \
+  -v /Users/dhenton/FE-projects/css-sandbox/droptest:/usr/local/nginx/html:ro \
+  -v /Users/dhenton/nginx/logs:/var/log/nginx  \
   --add-host dockerhost:`ifconfig vboxnet0 | grep 'inet' |awk '{print $2}'` \
   --rm  auth-nginx-debug 
 ```
 
+### Description of options
+The -v options in the sample usage map a drive on the host to a drive expected by the docker container, For example, 
+host folder /Users/dhenton/nginx/logs is mapped to /var/log/nginx, which is where the docker container will put its logs.
+
 ### Compile options
 > The compile options include the auth-request module, which can be used for authorization interception and SSO like things
-> "--with-debug" option will allow auth request matching debug information which can be activated with the debug entry on the error_log line in the conf file. 
+> "--with-debug" option will allow auth request matching debug information which can be activated with the debug entry on the error_log line in the conf file. These compile options are located in the docker file around 29. The current file in master does not have this turnd on.
 
 
 ### Docker host
