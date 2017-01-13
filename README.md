@@ -3,7 +3,7 @@ Dockerfile for nginx with auth-request-module and http-ssl module compiled in. S
 
 ### Sample usage:
 ```bash
-  docker  run --name=test  -p 80:80 
+  docker  run --name=nginx-container  -p 80:80 
   -v /Users/dhenton/bin/nginx-conf/ngproxy.conf:/etc/nginx/nginx.conf:ro \
   -v /Users/dhenton/FE-projects/css-sandbox/droptest:/usr/local/nginx/html:ro \
   -v /Users/dhenton/nginx/logs:/var/log/nginx  \
