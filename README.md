@@ -17,11 +17,11 @@ host folder /Users/dhenton/nginx/logs is mapped to /var/log/nginx, which is wher
 
 ### Compile options
 The compile options include the auth-request module, which can be used for authorization interception and SSO like things
-"--with-debug" option will allow auth request matching debug information which can be activated with the debug entry on the error_log line in the conf file. These compile options are located in the docker file around 29. The current file in master does not have this turnd on.
+"--with-debug" option will allow auth request matching debug information which can be activated with the debug entry on the error_log line in the conf file. These compile options are located in the docker file around 29. The current file in master does not have this turned on.
 
 
 ### Docker host
-In the above sample usage the add-host flag adds the ip to the container etc/hosts file that will allow access to services on the host, eg a web server.
+In the above sample usage the add-host flag adds the ip to the container etc/hosts file that will allow access to services on the host, eg a web server. This syntax is Mac only.
 
 ### Docker file lua
 The Dockerfile_lua script compiles the lua module which allows lua scripting for conf files: 
