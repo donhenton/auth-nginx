@@ -21,7 +21,7 @@ The compile options include the auth-request module, which can be used for autho
 
 
 ### Docker host
-In the above sample usage the add-host flag adds the ip to the container etc/hosts file that will allow access to services on the host, eg a web server. This syntax is Mac only.
+In the above sample usage the add-host flag adds the ip to the container etc/hosts file that will allow access to services on the host, eg a web server. This syntax is Mac Docker Toolbox only. It is grepping the output of ifconfig to find the ip assigned by the Mac to the virtual box VM. Additionally mapping a file (ngproxy.conf) on the host to a *file* inside the container is only allowed if the external file is part of a docker volume. This happens automatically with docker-toolbox for the Mac for the /Users directory. In general in real docker, you can only mount volumes.
 
 ### Docker file lua
 The Dockerfile_lua script compiles the lua module which allows lua scripting for conf files: 
